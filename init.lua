@@ -812,10 +812,31 @@ require('lazy').setup({
       require('mini.surround').setup()
 
       -- Simple and easy statusline.
-      --  You could remove this setup call if you don't like it,
-      --  and try some other statusline plugin
+      -- You could remove this setup call if you don't like it,
+      -- and try some other statusline plugin
       local statusline = require 'mini.statusline'
-      -- set use_icons to true if you have a Nerd Font
+
+      -- Function to shorten the file path
+      local function shorten_path(path)
+        local home = os.getenv 'HOME'
+        if path:find(home) then
+          path = path:gsub(home, '~')
+        end
+
+        local parts = {}
+        for part in path:gmatch '[^/]+' do
+          table.insert(parts, part)
+        end
+
+        -- Truncate the path to show only the last two directories
+        if #parts > 2 then
+          return '...' .. table.concat(parts, '/', #parts - 2)
+        end
+
+        return path
+      end
+
+      -- Set use_icons to true if you have a Nerd Font
       statusline.setup { use_icons = vim.g.have_nerd_font }
 
       -- You can configure sections in the statusline by overriding their
@@ -826,6 +847,11 @@ require('lazy').setup({
         return '%2l:%-2v'
       end
 
+      -- Customize the section for the file name
+      statusline.section_filename = function()
+        local filename = vim.fn.expand '%:p' -- Get the full file path
+        return shorten_path(filename) -- Shorten the file path
+      end
       -- ... and there is more!
       --  Check out: https://github.com/echasnovski/mini.nvim
     end,
