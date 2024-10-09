@@ -988,5 +988,50 @@ require('lazy').setup({
   },
 })
 
--- The line beneath this is called `modeline`. See `:help modeline`
+function MNote()
+  local date = os.date '%Y-%m-%d'
+  local filename = 'note_' .. date .. '_mdnote.md' -- Updated filename format
+  local template_path = vim.fn.stdpath 'config' .. '/templates/mdnote_template.md'
+
+  -- Check if the note already exists
+  if vim.fn.filereadable(filename) == 1 then
+    -- If the note exists, open it for editing
+    vim.cmd('edit ./' .. filename)
+  else
+    -- If the note does not exist, create a new one
+    vim.cmd('edit ' .. filename)
+
+    -- Check if the template file exists
+    if not vim.fn.filereadable(template_path) then
+      print('Template file not found: ' .. template_path)
+      return
+    end
+
+    -- Read the template and replace the date placeholder
+    local template_content = vim.fn.readfile(template_path)
+    -- -- Debug: Print the template content
+    -- print 'Template content:'
+    -- for _, line in ipairs(template_content) do
+    --   print(line)
+    -- end
+
+    if not template_content or #template_content == 0 then
+      print 'Template file is empty or could not be read.'
+      return
+    end
+
+    -- Replace the date placeholder in the template content
+    local content = table.concat(template_content, '\n'):gsub('{{date}}', date)
+
+    -- Debug: Print the final content
+    -- print 'Final content to insert:'
+    -- print(content)
+
+    -- Insert the content into the new file
+    vim.api.nvim_buf_set_lines(0, 0, -1, false, vim.split(content, '\n'))
+    vim.cmd 'write'
+  end
+end
+
+vim.api.nvim_create_user_command('MNote', MNote, {}) -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
