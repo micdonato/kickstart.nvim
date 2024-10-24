@@ -17,7 +17,7 @@ function adrnote.setup()
   end
 
   -- Create a command `:AdrNote` that calls the function
-  vim.api.nvim_create_user_command('AdrNote', open_adr_note, {})
+  vim.api.nvim_create_user_command('Adrnote', open_adr_note, {})
 end
 
 return {
