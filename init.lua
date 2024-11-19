@@ -249,7 +249,7 @@ require('lazy').setup({
           ['core.dirman'] = {
             config = {
               workspaces = {
-                notes = '~/workspaces/notes',
+                notes = '~/Workspaces/notes',
               },
               default_workspace = 'notes',
             },
