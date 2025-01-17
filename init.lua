@@ -245,6 +245,15 @@ require('lazy').setup({
       require('neorg').setup {
         load = {
           ['core.defaults'] = {},
+          ['core.qol.todo_items'] = {
+            config = {
+              order = {
+                { 'undone', ' ' },
+                { 'pending', '-' },
+                { 'done', 'x' },
+              },
+            },
+          },
           ['core.concealer'] = {},
           ['core.dirman'] = {
             config = {
@@ -968,6 +977,7 @@ require('lazy').setup({
       ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
       -- Autoinstall languages that are not installed
       auto_install = true,
+      ignore_install = { 'csv' },
       highlight = {
         enable = true,
         -- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
