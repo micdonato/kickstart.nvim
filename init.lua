@@ -929,9 +929,15 @@ require('lazy').setup({
 branch = 'main',
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter-intro`
     config = function()
+      local treesitter_install = require 'nvim-treesitter.install'
+      local treesitter_info = require 'nvim-treesitter.info'
+      local treesitter_parsers = require 'nvim-treesitter.parsers'
+
       -- ensure basic parser are installed
       local parsers = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' }
-      require('nvim-treesitter').install(parsers)
+      local installed_parsers = treesitter_info.installed_parsers()
+      local missing_parsers = vim.tbl_filter(function(parser) return not vim.tbl_contains(installed_parsers, parser) end, parsers)
+      if #missing_parsers > 0 then treesitter_install.commands.TSInstall.run(missing_parsers) end
 
       ---@param buf integer
       ---@param language string
@@ -947,10 +953,10 @@ branch = 'main',
         -- vim.wo.foldmethod = 'expr'
 
         -- enables treesitter based indentation
-        vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+        vim.bo[buf].indentexpr = 'nvim_treesitter#indent()'
       end
 
-      local available_parsers = require('nvim-treesitter').get_available()
+      local available_parsers = treesitter_parsers.available_parsers()
       vim.api.nvim_create_autocmd('FileType', {
         callback = function(args)
           local buf, filetype = args.buf, args.match
@@ -969,12 +975,12 @@ branch = 'main',
           local language = vim.treesitter.language.get_lang(filetype)
           if not language then return end
 
-          local installed_parsers = require('nvim-treesitter').get_installed 'parsers'
+          installed_parsers = treesitter_info.installed_parsers()
 
           if vim.tbl_contains(installed_parsers, language) then
             treesitter_try_attach(buf, language)
           elseif vim.tbl_contains(available_parsers, language) then
-            require('nvim-treesitter').install(language):await(function() treesitter_try_attach(buf, language) end)
+            treesitter_install.commands.TSInstall.run(language)
           else
             treesitter_try_attach(buf, language)
           end
