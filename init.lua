@@ -955,6 +955,17 @@ branch = 'main',
         callback = function(args)
           local buf, filetype = args.buf, args.match
 
+          if filetype == 'csv'
+            or filetype == 'tsv'
+            or filetype == 'csv_semicolon'
+            or filetype == 'csv_whitespace'
+            or filetype == 'csv_pipe'
+            or filetype == 'rfc_csv'
+            or filetype == 'rfc_semicolon'
+          then
+            return
+          end
+
           local language = vim.treesitter.language.get_lang(filetype)
           if not language then return end
 
