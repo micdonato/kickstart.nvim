@@ -293,7 +293,6 @@ require('lazy').setup({
       'RainbowMultiDelim',
     },
   },
-  { 'projekt0n/github-nvim-theme', name = 'github-theme' },
   -- Here is a more advanced example where we pass configuration
   -- options to `gitsigns.nvim`.
   --
@@ -836,12 +835,6 @@ require('lazy').setup({
     priority = 1000, -- Make sure to load this before all the other start plugins.
     config = function()
       ---@diagnostic disable-next-line: missing-fields
-      require('tokyonight').setup {
-        styles = {
-          comments = { italic = false }, -- Disable italics in comments
-        },
-      }
-
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
@@ -926,17 +919,15 @@ require('lazy').setup({
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
-branch = 'main',
+    branch = 'main',
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter-intro`
     config = function()
       local treesitter_install = require 'nvim-treesitter.install'
-      local treesitter_info = require 'nvim-treesitter.info'
       local treesitter_parsers = require 'nvim-treesitter.parsers'
 
       -- ensure basic parser are installed
       local parsers = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' }
-      local installed_parsers = treesitter_info.installed_parsers()
-      local missing_parsers = vim.tbl_filter(function(parser) return not vim.tbl_contains(installed_parsers, parser) end, parsers)
+      local missing_parsers = vim.tbl_filter(function(parser) return not pcall(vim.treesitter.language.add, parser) end, parsers)
       if #missing_parsers > 0 then treesitter_install.commands.TSInstall.run(missing_parsers) end
 
       ---@param buf integer
@@ -956,12 +947,13 @@ branch = 'main',
         vim.bo[buf].indentexpr = 'nvim_treesitter#indent()'
       end
 
-      local available_parsers = treesitter_parsers.available_parsers()
+      local available_parsers = vim.tbl_keys(treesitter_parsers)
       vim.api.nvim_create_autocmd('FileType', {
         callback = function(args)
           local buf, filetype = args.buf, args.match
 
-          if filetype == 'csv'
+          if
+            filetype == 'csv'
             or filetype == 'tsv'
             or filetype == 'csv_semicolon'
             or filetype == 'csv_whitespace'
@@ -975,9 +967,7 @@ branch = 'main',
           local language = vim.treesitter.language.get_lang(filetype)
           if not language then return end
 
-          installed_parsers = treesitter_info.installed_parsers()
-
-          if vim.tbl_contains(installed_parsers, language) then
+          if pcall(vim.treesitter.language.add, language) then
             treesitter_try_attach(buf, language)
           elseif vim.tbl_contains(available_parsers, language) then
             treesitter_install.commands.TSInstall.run(language)
