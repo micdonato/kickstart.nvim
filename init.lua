@@ -832,6 +832,7 @@ require('lazy').setup({
     --
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
     'projekt0n/github-nvim-theme',
+    lazy = false,
     priority = 1000, -- Make sure to load this before all the other start plugins.
     config = function()
       ---@diagnostic disable-next-line: missing-fields
@@ -840,7 +841,8 @@ require('lazy').setup({
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
       -- vim.cmd.colorscheme 'material-darker'
       -- vim.g.material_style = 'darker'
-      vim.cmd.colorscheme 'github_light'
+      require('github-theme').setup {}
+      vim.cmd.colorscheme 'github_dark'
 
       -- You can configure highlights by doing something like:
       vim.cmd.hi 'Comment gui=none'
