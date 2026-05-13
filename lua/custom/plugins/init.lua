@@ -1,8 +1,14 @@
--- You can add your own plugins here or in other files in this directory!
---  I promise not to create any merge conflicts in this directory :)
---
--- See the kickstart.nvim README for more information
+local function gh(repo)
+  return 'https://github.com/' .. repo
+end
 
----@module 'lazy'
----@type LazySpec
-return {}
+vim.pack.add {
+  gh 'projekt0n/github-nvim-theme',
+  gh 'cameron-wags/rainbow_csv.nvim',
+}
+
+require('github-theme').setup {}
+vim.cmd.colorscheme 'github_dark'
+vim.cmd.hi 'Comment gui=none'
+
+require('rainbow_csv').setup()
