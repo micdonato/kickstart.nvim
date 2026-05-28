@@ -697,7 +697,16 @@ do
   local servers = {
     -- clangd = {},
     -- gopls = {},
-    pyright = {},
+    pyright = {
+      before_init = function(_, config)
+        local venv = os.getenv 'VIRTUAL_ENV'
+        if venv then
+          config.settings = config.settings or {}
+          config.settings.python = config.settings.python or {}
+          config.settings.python.pythonPath = venv .. '/bin/python'
+        end
+      end,
+    },
     -- rust_analyzer = {},
     --
     -- Some languages (like typescript) have entire language plugins that can be useful:
