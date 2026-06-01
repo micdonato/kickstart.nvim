@@ -430,8 +430,12 @@ do
     return path
   end
 
-  -- Set `use_icons` to true if you have a Nerd Font
-  statusline.setup { use_icons = vim.g.have_nerd_font }
+  -- Set `use_icons` to true if you have a Nerd Font AND you are not in VSCode
+  local is_vscode = vim.g.vscode
+
+  statusline.setup {
+    use_icons = vim.g.have_nerd_font and not is_vscode,
+  }
 
   -- You can configure sections in the statusline by overriding their
   -- default behavior. For example, here we set the section for
