@@ -5,6 +5,7 @@ vim.pack.add {
   gh 'cameron-wags/rainbow_csv.nvim',
   gh 'Tsuzat/NeoSolarized.nvim',
   gh 'Vigemus/iron.nvim',
+  gh 'NeogitOrg/neogit',
 }
 
 -- require('github-theme').setup {}
@@ -18,6 +19,9 @@ vim.cmd.colorscheme 'NeoSolarized'
 vim.cmd.hi 'Comment gui=none'
 
 require('rainbow_csv').setup()
+
+require('neogit').setup {}
+vim.keymap.set('n', '<leader>gg', '<cmd>Neogit<CR>', { desc = 'Open Neogit UI' })
 
 do
   local iron = require 'iron.core'

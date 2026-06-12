@@ -54,6 +54,10 @@
       "rev": "17c448b0f3f29c0857a3436fc64e1d7cb9267ec3",
       "src": "https://github.com/nvim-mini/mini.nvim"
     },
+    "neogit": {
+      "rev": "99326a1310fb2d616b455d2fd16d01bf00682f06",
+      "src": "https://github.com/NeogitOrg/neogit"
+    },
     "nvim-lspconfig": {
       "rev": "4d9647d7b14dd2756578761f8cc2cf80f671b926",
       "src": "https://github.com/neovim/nvim-lspconfig"
