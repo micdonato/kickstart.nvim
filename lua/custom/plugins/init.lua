@@ -39,7 +39,7 @@ do
           env = { PYTHON_BASIC_REPL = '1' },
         },
       },
-      repl_open_cmd = view.right(60),
+      repl_open_cmd = view.bottom(15),
     },
     keymaps = {
       send_line = '<leader>rl',
