@@ -813,7 +813,7 @@ do
   require('conform').setup {
     notify_on_error = false,
     format_on_save = function(bufnr)
-      local disable_filetypes = { c = true, cpp = true }
+      local disable_filetypes = { c = true, cpp = true, markdown = true }
       if disable_filetypes[vim.bo[bufnr].filetype] then return nil end
 
       return {
@@ -824,9 +824,22 @@ do
     default_format_opts = {
       lsp_format = 'fallback', -- Use external formatters if configured below, otherwise use LSP formatting. Set to `false` to disable LSP formatting entirely.
     },
+    formatters = {
+      pandoc_markdown = {
+        command = 'pandoc',
+        args = {
+          '--from=markdown',
+          '--to=markdown',
+          '--wrap=auto',
+          '--columns=88',
+        },
+        stdin = true,
+      },
+    },
     -- You can also specify external formatters in here.
     formatters_by_ft = {
       lua = { 'stylua' },
+      markdown = { 'pandoc_markdown' },
       -- rust = { 'rustfmt' },
       -- Conform can also run multiple formatters sequentially
       -- python = { "isort", "black" },
