@@ -1019,6 +1019,13 @@ do
   -- NOTE: Your personal configuration lives under `lua/custom`.
   pcall(require, 'custom.keymaps')
   pcall(require, 'custom.autocmds')
+
+  -- Personal plugins (vim.pack.add) and colorscheme setup.
+  -- plugins.lua must load first so vim.pack has installed everything
+  -- colorscheme.lua depends on.
+  require 'plugins'
+  require 'colorscheme'
+
   pcall(require, 'custom.plugins')
 end
 
