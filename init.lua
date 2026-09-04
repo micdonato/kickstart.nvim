@@ -644,6 +644,9 @@ do
   -- Useful status updates for LSP.
   vim.pack.add { gh 'j-hui/fidget.nvim' }
   require('fidget').setup {}
+  -- Route `vim.notify` through fidget so notifications render in its UI
+  -- instead of the plain message area.
+  vim.notify = require('fidget').notify
 
   --  This function gets run when an LSP attaches to a particular buffer.
   --    That is to say, every time a new file is opened that is associated with
@@ -927,7 +930,7 @@ do
     -- the rust implementation via `'prefer_rust_with_warning'`
     --
     -- See `:help blink-cmp-config-fuzzy` for more information
-    fuzzy = { implementation = 'lua' },
+    fuzzy = { implementation = 'prefer_rust_with_warning' },
 
     -- Shows a signature help window while you type arguments for a function
     signature = { enabled = true },
