@@ -1,5 +1,4 @@
 vim.opt.termguicolors = true
-vim.o.background = 'dark'
 
 local vscode = require(vim.g.vscode and 'vscode.init' or 'vscode')
 
@@ -7,21 +6,23 @@ vscode.setup {
   terminal_colors = true,
 }
 
-local function use_light_theme()
+local function load_theme()
+  -- Let Neovim set `background`; vscode.nvim reads the current value.
+  vscode.load()
+end
+
+vim.api.nvim_create_autocmd('OptionSet', {
+  pattern = 'background',
+  callback = load_theme,
+})
+
+vim.api.nvim_create_user_command('ThemeLight', function()
   vim.o.background = 'light'
-  vscode.load('light')
-end
+end, { desc = 'Use VS Code light theme' })
 
-local function use_dark_theme()
+vim.api.nvim_create_user_command('ThemeDark', function()
   vim.o.background = 'dark'
-  vscode.load('dark')
-end
+end, { desc = 'Use VS Code dark theme' })
 
-vim.api.nvim_create_user_command('ThemeLight', use_light_theme, { desc = 'Use VS Code light theme' })
-vim.api.nvim_create_user_command('ThemeDark', use_dark_theme, { desc = 'Use VS Code dark theme' })
-
-if vim.g.vscode then
-  vscode.load('dark')
-else
-  vim.cmd.colorscheme('vscode')
-end
+-- OptionSet does not run for the initial value.
+load_theme()
